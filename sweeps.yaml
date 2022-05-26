@@ -1,0 +1,36 @@
+program: train.py
+method: grid
+metric:
+  goal: maximize
+  name: test_best_acc
+parameters: 
+  dset:
+    values: 
+      - mnist
+      - cifar10
+  optimizer:
+    values:
+      - sgd
+      - sgd_momentum
+      - adam
+      - rmsprop
+      - radam
+  lr_scheduler:
+    values:
+      - none
+      - linear_warmup_cosine_annealing
+      - cosine_annealing
+      - exponential_decay
+  model:
+    values:
+      - resnet
+      - vggnet
+      - vit
+  lr_init:
+    values:
+      - 1.0
+      - 0.1
+      - 0.01
+      - 0.001
+      - 0.0001
+      
