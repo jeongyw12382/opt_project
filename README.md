@@ -6,4 +6,4 @@ Final project for the class "Optimization for Machine Learning."
     $ conda create -n opt_project python=3.8 -c anaconda -y
     $ conda activate opt_project
     (opt_project) $ conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch -y
-    (opt_project) $ pip3 install tqdm wandb
+    (opt_project) $ pip3 install tqdm wandb protobuf==3.20.0
