@@ -10,7 +10,7 @@ import torchvision.transforms as tf
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST, CIFAR10
 from torch.optim import SGD, Adam, RAdam, RMSprop
-from torchvision.models import resnet18, vgg11, vit_b_16
+from torchvision.models import resnet18, resnet34, vgg11, vgg13
 
 from scheduler import *
 
@@ -38,9 +38,6 @@ def run(args):
     elif args.model == "vggnet":
         model = vgg11(pretrained=args.pretrained)
         model.classifier[-1] = nn.Linear(4096, 10, bias=True)
-    elif args.model == "vit":
-        model = vit_b_16(pretrained=args.pretrained)
-        model.heads.head = nn.Linear(768, 10, bias=True)
 
     model = model.cuda()
 

@@ -25,7 +25,6 @@ parameters:
     values:
       - resnet
       - vggnet
-      - vit
   lr_init:
     values:
       - 1.0
