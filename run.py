@@ -17,7 +17,7 @@ from scheduler import *
 dropout_dict = {0: 0, 1: 0.4, 2:0.8}
 
 def transform(args):
-    strength = 0.5 * args.level / 3
+    strength = 0.5 * args.noise_level / 3
     jitter = tf.ColorJitter(strength, strength, strength, strength)
     return tf.Compose([jitter, tf.ToTensor()])
 
