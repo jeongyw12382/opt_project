@@ -3,25 +3,21 @@
 optimizer="$1"
 dropout="$2"
 
+lr_scheduler=linear_warmup_cosine_annealing
 case $optimizer in
     sgd)
-        lr_scheduler=linear_warmup_cosine_annealing
         lr_init=1
         ;;
     sgd_momentum)
-        lr_scheduler=linear_warmup_cosine_annealing
         lr_init=1
         ;;
     adam)
-        lr_scheduler=exponential_decay
-        lr_init=0.001
+        lr_init=0.1
         ;;
     rmsprop)
-        lr_scheduler=linear_warmup_cosine_annealing
         lr_init=0.01
         ;;
     radam)
-        lr_scheduler=linear_warmup_cosine_annealing
         lr_init=0.1
         ;;
 esac
