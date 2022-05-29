@@ -24,10 +24,10 @@ def transform(args):
 def run(args):
 
     if args.dset == "mnist":
-        train_dataset = MNIST("data", True, tf.ToTensor(), download=True)
+        train_dataset = MNIST("data", True, transform, download=True)
         test_dataset = MNIST("data", False, tf.ToTensor(), download=True)
     elif args.dset == "cifar10":
-        train_dataset = CIFAR10("data", True, tf.ToTensor(), download=True)
+        train_dataset = CIFAR10("data", True, transform, download=True)
         test_dataset = CIFAR10("data", False, tf.ToTensor(), download=True)
     else:
         raise NameError(f"No dset named {args.dset}")
