@@ -14,7 +14,7 @@ from torchvision.models import resnet18, resnet34, vgg11, vgg13
 
 from scheduler import *
 
-dropout_dict = {0: 0, 1: 0.4, 2:0.8}
+dropout_dict = {0: 0, 1: 0.3, 2:0.6, 3: 0.9}
 
 def transform(args):
     strength = 0.5 * args.noise_level / 3
