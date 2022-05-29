@@ -14,6 +14,13 @@ from torchvision.models import resnet18, resnet34, vgg11, vgg13
 
 from scheduler import *
 
+dropout_dict = {0: 0, 1: 0.3, 2:0.6, 3:0.9}
+
+def transform(args):
+    strength = 0.5 * args.level / 3
+    jitter = tf.ColorJitter(strength, strength, strength, strength)
+    return tf.Compose([jitter, tf.ToTensor()])
+
 def run(args):
 
     if args.dset == "mnist":
@@ -32,12 +39,18 @@ def run(args):
         test_dataset, batch_size=args.bsz, shuffle=False, num_workers=4
     )
 
+    dropout_ratio = dropout_dict[args.dropout_level]
+
     if args.model == "resnet":
         model = resnet18(pretrained=args.pretrained)
         model.fc = nn.Linear(512, 10, bias=True)
+        if dropout_ratio > 0:
+            model.fc = nn.Dropout(dropout_ratio, model.fc)
     elif args.model == "vggnet":
         model = vgg11(pretrained=args.pretrained)
         model.classifier[-1] = nn.Linear(4096, 10, bias=True)
+        if dropout_ratio > 0:
+            model.classifier[-1] = nn.Dropout(dropout_ratio, model.classifier[-1])
 
     model = model.cuda()
 
@@ -187,6 +200,18 @@ if __name__ == "__main__":
         "--global_step",
         type=int,
         default=100000,
+    )
+
+    parser.add_argument(
+        "--dropout_level", 
+        type=int,
+        default=0
+    )
+
+    parser.add_argument(
+        "--noise_level",
+        type=int, 
+        default=0
     )
 
     args = parser.parse_args()
