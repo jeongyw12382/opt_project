@@ -1,3 +1,4 @@
+from turtle import forward
 import wandb
 import torch
 import argparse
@@ -15,6 +16,23 @@ from torchvision.models import resnet18, resnet34, vgg11, vgg13
 from scheduler import *
 
 dropout_dict = {0: 0, 1: 0.3, 2:0.6, 3: 0.9}
+
+class ResNet18(nn.Module):
+
+    def __init__(self, args): 
+        super(ResNet18, self).__init__()
+        self.model = resnet18(pretrained=args.pretrained)
+        self.model.fc = nn.Identity()
+        self.fc = nn.Linear(512, 10, bias=True)
+
+        dropout_ratio = dropout_dict[args.dropout_level]
+        self.dropout = nn.Dropout(dropout_ratio)
+        
+    def forward(self, x):
+        x = self.model(x)
+        x = self.dropout(x)
+        x = self.fc(x)
+        return x
 
 def transform(args):
     strength = 0.5 * args.noise_level / 3
@@ -39,16 +57,8 @@ def run(args):
         test_dataset, batch_size=args.bsz, shuffle=False, num_workers=4
     )
 
-    dropout_ratio = dropout_dict[args.dropout_level]
-
     if args.model == "resnet":
-        model = resnet18(pretrained=args.pretrained)
-        model.fc = nn.Linear(512, 10, bias=True)
-        if dropout_ratio > 0:
-            model.layer4[1].conv2 = nn.Dropout(
-                dropout_ratio, 
-                model.layer4[1].conv2
-            )
+        model = ResNet18(args)
     elif args.model == "vggnet":
         model = vgg11(pretrained=args.pretrained)
         model.classifier[-1] = nn.Linear(4096, 10, bias=True)
@@ -105,6 +115,7 @@ def run(args):
 
             logit = F.softmax(model(image), dim=1)
             loss = -(one_hot * torch.log(logit)).sum(dim=1).mean()
+
             loss.backward()
 
             if step % 100 == 0:
