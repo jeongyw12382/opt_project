@@ -45,12 +45,13 @@ def run(args):
         model = resnet18(pretrained=args.pretrained)
         model.fc = nn.Linear(512, 10, bias=True)
         if dropout_ratio > 0:
-            model.fc = nn.Dropout(dropout_ratio, model.fc)
+            model.layer4[1].conv2 = nn.Dropout(
+                dropout_ratio, 
+                model.layer4[1].conv2
+            )
     elif args.model == "vggnet":
         model = vgg11(pretrained=args.pretrained)
         model.classifier[-1] = nn.Linear(4096, 10, bias=True)
-        if dropout_ratio > 0:
-            model.classifier[-1] = nn.Dropout(dropout_ratio, model.classifier[-1])
 
     model = model.cuda()
 
